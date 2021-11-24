@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Hall_2_Guess_game/1.0.0": {
+        "runtime": {
+          "Hall_2_Guess_game.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Hall_2_Guess_game/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
