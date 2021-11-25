@@ -1,35 +1,51 @@
-﻿int RequestNumber(string message) 
+int requestNumber()  
 {
-    Console.WriteLine(message);
-    string line = Console.ReadLine();
-    return Convert.ToInt32(line);
+    Console.WriteLine("Введите число:");
+    string str = Console.ReadLine(); 
+    int num = 0;  
+    try
+    {
+        num = Convert.ToInt32(str);
+    }
+    catch
+    {
+        Console.WriteLine("Ошибка при вводе числа. Будьте внимательны.");
+    }
+    return num;
 }
 
-int CreateSecretNumber(int leftBound, int rightBound) {
-    return new Random().Next(leftBound, rightBound);
-}
-
-bool MakeMove(int secretNumber, int countOfAttempts) 
+int CreateNumber()
 {
-    int playersNumber = RequestNumber("У вас осталось " + countOfAttempts + " попыток. " + "Введите число: ");
-    if (playersNumber == secretNumber) 
-    {
-        return true;
-    }
-    if (playersNumber > secretNumber) 
-    {
-        Console.WriteLine("Ваше число больше того, которое мы загадали");
-    } else 
-    {
-        Console.WriteLine("Ваше число меньше того, которое мы загадали");
-    }
-    return false;
-
+    return new Random().Next(1, 100);
 }
 
-int leftBound = 0;
-int rightBound = 100;
-int countOfAttempts = 7;
-int secretNumber = CreateSecretNumber(leftBound, rightBound);
-// int number = RequestNumber("Введите число: ");
-Console.WriteLine(secretNumber);
+// int answer = requestNumber();
+int secretNum = CreateNumber();
+Console.WriteLine(secretNum);
+
+bool IsItTrue(int secretNum)
+{
+    bool res = false;
+    for(int count = 2; count >= 0; count--)
+    {
+        int answer = requestNumber();
+        if(secretNum == answer)
+        {
+            Console.Write("Вы угадали! ");
+            res = true;
+            break;
+        }
+        else
+        {
+            if(count == 0) break;
+            if(secretNum > answer) Console.WriteLine($"Загаданное число больше. Осталось {count} попытка(-и).");
+            else Console.WriteLine($"Загаданное число меньше. Осталось {count} попытка(-и).");
+        }
+    }
+    return res;
+}
+
+bool result = IsItTrue(secretNum);
+if(result == true) Console.WriteLine("Поздравляем!");
+else 
+Console.WriteLine("Повезет в следующий раз!");
