@@ -1,35 +1,107 @@
-﻿int RequestNumber(string message) 
+﻿ //Объявляем переменные
+int newNumber = 0;
+int numberOfAttempts = 8;
+
+//Массив - конец игры
+int[,] gameOver = new int[,]
 {
-    Console.WriteLine(message);
-    string line = Console.ReadLine();
-    return Convert.ToInt32(line);
-}
+{0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1},
+{0,1,1,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,1,1,1,1,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1},
+{0,1,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1},
+{0,1,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1},
+{0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1},
+{0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0},
+{0,1,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1},
+{0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1},
+};
 
-int CreateSecretNumber(int leftBound, int rightBound) {
-    return new Random().Next(leftBound, rightBound);
-}
-
-bool MakeMove(int secretNumber, int countOfAttempts) 
+//Печать массива
+void PrintArray(int[,] tabl)
 {
-    int playersNumber = RequestNumber("У вас осталось " + countOfAttempts + " попыток. " + "Введите число: ");
-    if (playersNumber == secretNumber) 
+    for (int i = 0; i < tabl.GetLength(0); i++)
     {
-        return true;
+        for (int j = 0; j < tabl.GetLength(1); j++)
+        {
+            if (tabl[i, j] == 0) Console.Write($" ");
+            else Console.Write($"*");
+        }
+        Console.WriteLine();
     }
-    if (playersNumber > secretNumber) 
-    {
-        Console.WriteLine("Ваше число больше того, которое мы загадали");
-    } else 
-    {
-        Console.WriteLine("Ваше число меньше того, которое мы загадали");
-    }
-    return false;
-
 }
 
-int leftBound = 0;
-int rightBound = 100;
-int countOfAttempts = 7;
-int secretNumber = CreateSecretNumber(leftBound, rightBound);
-// int number = RequestNumber("Введите число: ");
-Console.WriteLine(secretNumber);
+//Создаем случайное число
+int RandomNumber()
+{
+    int number = 0;
+    number = new Random().Next(10, 100);
+    return number;
+}
+
+//Получаем число от игрока
+int PlayerNumber()
+{
+    while (true)
+    {
+        Console.Write("Введите число: ");
+        string text = Console.ReadLine()!;
+        if (int.TryParse(text, out int number)) return number;
+        else Console.WriteLine("Вы ввели не число.");
+    }
+}
+
+//Конец игры, если игрок угадал
+string GameOver(int number)
+{
+    string text = "Вы угадали, это число: " + number;
+    return text;
+}
+
+//Сообщаем о том, что число больше загаданного
+string NumberMax()
+{
+    string text = "Ваше число больше загаданного.";
+    return text;
+}
+
+//Сообщаем о том, что число меньше загаданного
+string NumberMin()
+{
+    string text = "Ваше число меньше загаданного.";
+    return text;
+}
+
+//ОСновной модуль игры
+void Game(int pc)
+{
+    int player = PlayerNumber();
+    numberOfAttempts--;
+    Console.WriteLine("У вас осталось: " + numberOfAttempts + " попыток");
+    if (numberOfAttempts == 0)
+    {
+        Console.WriteLine();
+        PrintArray(gameOver);
+    }
+    else if (pc == player)
+    {
+        Console.WriteLine(GameOver(player));
+    }
+    else if (pc > player)
+    {
+        Console.WriteLine(NumberMin());
+        Game(newNumber);
+    }
+    else if (pc < player)
+    {
+        Console.WriteLine(NumberMax());
+        Game(newNumber);
+    }
+}
+
+//Выводим правила игры в консоль
+Console.WriteLine("Загадано число от 10 до 100.\nУ вас есть " + numberOfAttempts + " попыток, чтобы его найти.");
+
+//Принимаем в переменную загаданное число
+newNumber = RandomNumber();
+
+//Запуск игры
+Game(newNumber);
