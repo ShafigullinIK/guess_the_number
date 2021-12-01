@@ -1,35 +1,100 @@
-﻿int RequestNumber(string message) 
+﻿int secret, min, max;
+int countOfAttempts;
+int b = 0;
+
+int RequestNumber()
 {
-    Console.WriteLine(message);
-    string line = Console.ReadLine();
-    return Convert.ToInt32(line);
+    int number = Convert.ToInt32(Console.ReadLine());
+    return number;
 }
 
-int CreateSecretNumber(int leftBound, int rightBound) {
-    return new Random().Next(leftBound, rightBound);
-}
-
-bool MakeMove(int secretNumber, int countOfAttempts) 
+int GenNumber(int min, int max)
 {
-    int playersNumber = RequestNumber("У вас осталось " + countOfAttempts + " попыток. " + "Введите число: ");
-    if (playersNumber == secretNumber) 
+    int number = new Random().Next(min, max+1);
+    return number;
+}
+
+int MakeMove(int SecretNumber, int CountOfAttempts)
+{
+    if (CountOfAttempts != 0)
     {
-        return true;
+    Console.Write("Введите число: ");
+    int recNum = RequestNumber();
+        if (recNum == SecretNumber)
+        {
+            return 1;
+        }
+        else {
+            if (recNum > SecretNumber)
+            {
+                Console.WriteLine("Ваше число больше загаданного.");
+            }
+            else if (recNum < SecretNumber)
+            {
+                Console.WriteLine("Ваше число меньше загаданного.");
+            }
+            return 0;
+        }
     }
-    if (playersNumber > secretNumber) 
-    {
-        Console.WriteLine("Ваше число больше того, которое мы загадали");
-    } else 
-    {
-        Console.WriteLine("Ваше число меньше того, которое мы загадали");
-    }
-    return false;
+    else return -1;
 
 }
 
-int leftBound = 0;
-int rightBound = 100;
-int countOfAttempts = 7;
-int secretNumber = CreateSecretNumber(leftBound, rightBound);
-// int number = RequestNumber("Введите число: ");
-Console.WriteLine(secretNumber);
+void Main()
+{
+    int a = MakeMove(secret, countOfAttempts);
+    switch (a)
+    {
+        case 1:
+            Console.WriteLine("Вы угадали число! Игра окончена.");
+            b = 1;
+            break;
+        case 0:
+            Console.WriteLine($"Осталось {countOfAttempts-1} попыток.");
+            break;
+        case -1:
+            Console.WriteLine("У Вас закончились попытки. Вы проиграли.");
+            Console.WriteLine($"Было загадано число {secret}");
+            b = 1;
+            break;
+
+    }
+    countOfAttempts--;
+
+    if (b == 0) Main();
+    else {Reset();};
+
+}
+
+void Reset()
+{
+Console.Write("Играем еще? (Y - Да, N - Нет)");
+ConsoleKeyInfo result = Console.ReadKey();
+    if ((result.KeyChar == 'Y') || (result.KeyChar == 'y'))
+    {
+        b = 0;
+        Console.Clear();
+        Game();
+    }
+    else if ((result.KeyChar == 'N') || (result.KeyChar == 'n'))
+    {
+     return;
+    }
+}
+
+void Game()
+{
+Console.WriteLine("Введите минимальное число: ");
+min = RequestNumber();
+Console.WriteLine("Введите максимальное число: ");
+max = RequestNumber();
+Console.WriteLine("Введите число попыток: ");
+countOfAttempts = RequestNumber();
+secret = GenNumber(min,max);
+Console.WriteLine("Для начала игры нажмите любую клавишу.");
+Console.ReadKey();
+Console.WriteLine($"Компьютер загадал число в диапазоне от {min} до {max}. У Вас есть {countOfAttempts} попыток, чтобы угадать это число.");
+Main();
+}
+
+Game();
