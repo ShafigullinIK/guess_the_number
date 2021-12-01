@@ -62,10 +62,28 @@ void Main()
     countOfAttempts--;
 
     if (b == 0) Main();
-    else { };
+    else {Reset();};
 
 }
 
+void Reset()
+{
+Console.Write("Играем еще? (Y - Да, N - Нет)");
+ConsoleKeyInfo result = Console.ReadKey();
+    if ((result.KeyChar == 'Y') || (result.KeyChar == 'y'))
+    {
+        b = 0;
+        Console.Clear();
+        Game();
+    }
+    else if ((result.KeyChar == 'N') || (result.KeyChar == 'n'))
+    {
+     return;
+    }
+}
+
+void Game()
+{
 Console.WriteLine("Введите минимальное число: ");
 min = RequestNumber();
 Console.WriteLine("Введите максимальное число: ");
@@ -77,4 +95,6 @@ Console.WriteLine("Для начала игры нажмите любую кла
 Console.ReadKey();
 Console.WriteLine($"Компьютер загадал число в диапазоне от {min} до {max}. У Вас есть {countOfAttempts} попыток, чтобы угадать это число.");
 Main();
-Console.ReadKey();
+}
+
+Game();
