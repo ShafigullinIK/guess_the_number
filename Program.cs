@@ -16,16 +16,15 @@ int GenNumber(int min, int max)
 
 int MakeMove(int SecretNumber, int CountOfAttempts)
 {
-    Console.Write("Введите число: ");
-    int recNum = RequestNumber();
     if (CountOfAttempts != 0)
     {
+    Console.Write("Введите число: ");
+    int recNum = RequestNumber();
         if (recNum == SecretNumber)
         {
             return 1;
         }
-        else
-        {
+        else {
             if (recNum > SecretNumber)
             {
                 Console.WriteLine("Ваше число больше загаданного.");
@@ -43,7 +42,6 @@ int MakeMove(int SecretNumber, int CountOfAttempts)
 
 void Main()
 {
-    countOfAttempts--;
     int a = MakeMove(secret, countOfAttempts);
     switch (a)
     {
@@ -52,7 +50,7 @@ void Main()
             b = 1;
             break;
         case 0:
-            Console.WriteLine($"Осталось {countOfAttempts} попыток.");
+            Console.WriteLine($"Осталось {countOfAttempts-1} попыток.");
             break;
         case -1:
             Console.WriteLine("У Вас закончились попытки. Вы проиграли.");
@@ -61,6 +59,7 @@ void Main()
             break;
 
     }
+    countOfAttempts--;
 
     if (b == 0) Main();
     else { };
@@ -78,3 +77,4 @@ Console.WriteLine("Для начала игры нажмите любую кла
 Console.ReadKey();
 Console.WriteLine($"Компьютер загадал число в диапазоне от {min} до {max}. У Вас есть {countOfAttempts} попыток, чтобы угадать это число.");
 Main();
+Console.ReadKey();
