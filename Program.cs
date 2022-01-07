@@ -1,41 +1,141 @@
-﻿// Ввод своего имени и объяснение правил
-void Intro()
+﻿void Interface(int[] tools) // Основной интерфейс игры
 {
-    Console.WriteLine("Введите свое имя");
-    string name = InputData("String");
-    Console.Clear();
-    System.Threading.Thread.Sleep(500);
-    Console.WriteLine($"Приветствую тебя, {name}! Тебе необходимо угадать число, которое я загадаю.");
-    System.Threading.Thread.Sleep(3000);
+    Intro();
+    GameInit(tools);
+    do { CheckWinner(MainGame(tools)); } while (GameOver());
 }
 
-// Здесь мы выбираем: хотим играть в своем диапазоне чисел или в диапазоне по умолчанию
-void GameInit(int[] numberArr)
+void Intro() // Знакомство
 {
-    Console.Clear();
-    Console.WriteLine("Диапазон чисел вы хотите ввести сами? (y/n)");
-    if (InputData("Bool") != "n")
-    {
-        Console.WriteLine("Введите начальный отрезок для числа");
-        numberArr[0] = Convert.ToInt32(InputData("Int32"));
-        Console.WriteLine("Введите конечный отрезок для числа");
-        numberArr[1] = Convert.ToInt32(InputData("Int32"));
-        Console.WriteLine("Введите количество попыток");
-        numberArr[2] = Convert.ToInt32(InputData("Int32"));
-    }
-    int numberGuess = new Random().Next(numberArr[0], numberArr[1] + 1);
-    numberArr[3] = numberGuess;
-    Console.Clear();
+    string name = InputData("String", "Name");
+    OutputConsole("Tutorial1"); Console.Write(name); OutputConsole("Tutorial2");
 }
-// Проверка на правильность ввода данных
-// tool - это режим работы метода: строковые данные, целочисленные данные или выбор да/нет
-string InputData(string tool)
+
+void GameInit(int[] tools) // Пульт главного меню
+{
+    OutputConsole("Start");
+    switch (Console.ReadKey(true).Key)
+    {
+        case ConsoleKey.S: break;
+        case ConsoleKey.T: ChangeDefaultStart(tools); break;
+        default:
+            OutputConsole("Error");
+            break;
+    }
+}
+
+void ChangeDefaultStart(int[] tools) // Параметры игры
+{
+    tools[0] = Convert.ToInt32(InputData("Int32", "StartNumb"));
+    tools[1] = Convert.ToInt32(InputData("Int32", "EndNumb"));
+    tools[2] = Convert.ToInt32(InputData("Int32", "CountGuess"));
+}
+
+void CheckWinner(bool winner) // Определение победителя
+{
+    if (winner == true) OutputConsole("Winner");
+    else OutputConsole("Loser");
+}
+
+bool MainGame(int[] tools) // Основной движок игры
+{
+    int guessNumb = new Random().Next(tools[0], tools[1] + 1);
+    int inputNumb;
+    bool winner = false;
+    for (int count = tools[2]; !(count <= 0 || winner); count--)
+    {
+        OutputConsole("Count"); Console.Write(count); Console.WriteLine();
+        inputNumb = Convert.ToInt32(InputData("Int32", "Enter"));
+        if (inputNumb == guessNumb) winner = true;
+        if (inputNumb > guessNumb) OutputConsole("Upper");
+        if (inputNumb < guessNumb) OutputConsole("Lower");
+    }
+    return winner;
+}
+
+bool GameOver() // Выбор начинать новую игру или выйти
+{
+    return InputData("bool", "Newgame") == "y";
+}
+
+void OutputConsole(string sentence) // Интерфейс вывода в консоль и анимация
+{
+    switch (sentence)
+    {
+        case "Name":
+            Console.WriteLine("Enter your name:");
+            break;
+        case "Tutorial1":
+            Console.Clear();
+            System.Threading.Thread.Sleep(500);
+            Console.Write("Hello, ");
+            break;
+        case "Tutorial2":
+            Console.Write("! You are need to guess my number");
+            Console.WriteLine();
+            System.Threading.Thread.Sleep(3000);
+            break;
+        case "Start":
+            Console.WriteLine("To play press S, To change setting press T");
+            break;
+        case "Count":
+            Console.Clear();
+            System.Threading.Thread.Sleep(500);
+            Console.Write("Count of attempts to play: ");
+            break;
+        case "Enter":
+            System.Threading.Thread.Sleep(500);
+            Console.WriteLine("Enter your number");
+            break;
+        case "Winner":
+            Console.Clear();
+            System.Threading.Thread.Sleep(500);
+            Console.WriteLine("Congratulations! You guessed the number!");
+            break;
+        case "Loser":
+            Console.Clear();
+            System.Threading.Thread.Sleep(500);
+            Console.WriteLine("Sorry, you lose...");
+            break;
+        case "Newgame":
+            System.Threading.Thread.Sleep(2000);
+            Console.WriteLine("Do you want to play new game? (y/n): ");
+            break;
+        case "StartNumb":
+            Console.Clear();
+            Console.WriteLine("Enter start number");
+            break;
+        case "EndNumb":
+            Console.WriteLine("Enter end number:");
+            break;
+        case "CountGuess":
+            Console.WriteLine("Enter the number of attempts:");
+            break;
+        case "Upper":
+            Console.Clear();
+            Console.WriteLine("You entered a number greater");
+            System.Threading.Thread.Sleep(2000);
+            break;
+        case "Lower":
+            Console.Clear();
+            Console.WriteLine("You entered a number less");
+            System.Threading.Thread.Sleep(2000);
+            break;
+        case "Error":
+            Console.WriteLine("Your enter wrong value");
+            break;
+        default: break;
+    }
+}
+
+string InputData(string tool, string outValue) // Проверка входных данных
 {
     string inputdata = String.Empty;
     string toolUpper = tool.ToUpper();
     bool conduction = true;
     do
     {
+        OutputConsole(outValue);
         inputdata = Console.ReadLine()!;
         switch (toolUpper)
         {
@@ -57,48 +157,6 @@ string InputData(string tool)
     return inputdata;
 }
 
-// Метод сравнения входного числа с загаданным, результат печатается в консоль
-bool CheckNumber(int inputNumb, int guessNumb)
-{
-    Console.Clear();
-    if (inputNumb > guessNumb) Console.WriteLine("Перелёт");
-    else if (inputNumb < guessNumb) Console.WriteLine("Недолёт");
-    return inputNumb == guessNumb;
-}
-
-// "Двигатель" программы - спрашивает нас о числе, пока мы не отгадаем или пока не закончатся попытки
-bool MakeMove(int[] numberArr)
-{
-    bool game = false;
-    for (int i = 0, leng = numberArr[2]; i < numberArr[2]; i++)
-    {
-        Console.WriteLine($"Количество попыток {leng--}");
-        System.Threading.Thread.Sleep(500);
-        Console.WriteLine("Введите число");
-        if (CheckNumber(Convert.ToInt32(InputData("Int32")), numberArr[3])) return game = true;
-        System.Threading.Thread.Sleep(1000);
-        Console.Clear();
-    }
-    return game;
-}
-
-// Результат нашей игры - либо мы выиграли, либо проиграли. Вывод результата на консоль. Спрашивает о продолжении игры.
-bool GameOver(bool result)
-{
-    if (result == true) Console.WriteLine("Вы угадали! Поздравляем!");
-    else Console.WriteLine("Вы не угадали. Игра окончена.");
-    System.Threading.Thread.Sleep(1500);
-    Console.Clear();
-    Console.WriteLine("Желаете начать новую игру? (y/n)");
-    return (InputData("bool") != "n");
-}
-
-// MAIN
-// Значения по умочанию даны в виде массива и все параметры мы можем спокойно перегонять из метода в метод.
-// Сначала включается приветствие Intro();
-// Далее метод MakeMove спрашивает нас о числе, выдает истину или ложь об угаданном числе в метод GameOver()
-// и тот дает результат выигрыша или проигрыша. Затем спрашивает нас о желании играть дальше.
-// Цикл проверяет наше желание играть дальше пока мы не скажем "нет".
-int[] numbers = { 0, 100, 7, 25 };
-Intro();
-do {GameInit(numbers);} while (GameOver(MakeMove(numbers)));
+// Main
+int[] defaultStart = { 0, 100, 7 };
+Interface(defaultStart);
