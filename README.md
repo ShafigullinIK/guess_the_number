@@ -29,3 +29,5 @@ int PlayersNumber = requestNumber();
 
 
 Мои изменения!
+
+Вот такие!
