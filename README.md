@@ -26,3 +26,8 @@ bool MakeMove(int SecretNumber, int CountOfAttempts) - метод, в котор
 
 int SecretNumber = createNumber(1, 100);
 int PlayersNumber = requestNumber();
+
+
+Мои изменения!
+
+Вот такие!
